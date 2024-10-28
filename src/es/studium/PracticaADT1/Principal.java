@@ -47,13 +47,13 @@ public class Principal {
 		
 		System.out.println("-------------------------------------------------------------------------");
 		System.out.println(
-				"Si desea anadir un artículo a la lista pulse 'A'.\nSi desea eliminar un artículo de la lista pulse 'E'.\nPara mostrar la lista y salir de la aplicación pulse 'S'. ");
+				"Si desea anadir un artículo a la lista pulse 'A'.\nSi desea eliminar un artículo de la lista pulse 'E'.\nPara guardar la lista y salir de la aplicación pulse 'G'. ");
 		System.out.print("Opción escogida: ");
 		opcionUsuario = teclado.nextLine().toUpperCase().charAt(0);
 		System.out.println("-------------------------------------------------------------------------");
 		esOpcionValida = false;
 		opcionUsuario= validacionOpcionUsuario(teclado, esOpcionValida, opcionUsuario);
-		while (opcionUsuario != 'S') {
+		while (opcionUsuario != 'G') {
 			if (opcionUsuario == 'A') {
 				System.out.println("*** Ha escogido: AÑADIR ARTÍCULO ***");
 				System.out.print("Escriba el artículo que desea añadir a la lista: ");
@@ -75,27 +75,63 @@ public class Principal {
 
 				ArticuloAComprar articulo = new ArticuloAComprar(descripcion, cantidad, unidad);
 				listaDeLaCompra.listaArticulos.add(articulo);
-
+				System.out.println(" ");
+				System.out.println("Se ha añadido "+articulo.getDescripcion()+" a la lista de la compra.");
+				System.out.println("La lista de la compra ha quedado de la siguiente manera:");
+				mostrarLista(listaDeLaCompra);
+				System.out.println(" ");
+				System.out.println("-------------------------------------------------------------------------");
 				System.out.println(
 						"Si desea anadir otro artículo a la lista pulse 'A'.\nSi desea eliminar un artículo de la lista pulse 'E'.\nPara mostrar la lista y salir de la aplicación pulse 'S'. ");
 				System.out.print("Opción escogida: ");
 				opcionUsuario = teclado.nextLine().toUpperCase().charAt(0);
-				validacionOpcionUsuario(teclado, esOpcionValida, opcionUsuario);
+				opcionUsuario= validacionOpcionUsuario(teclado, esOpcionValida, opcionUsuario);
+				System.out.println("-------------------------------------------------------------------------");
 			}
 			if (opcionUsuario == 'E') {
 				System.out.println("*** Ha escogido: ELIMINAR ARTÍCULO ***");
 				if(listaDeLaCompra.listaArticulos.isEmpty()) {
+					System.out.println(" ");
 					System.out.println("No es posible eliminar ningún artículo porque la lista está vacía.");
 					System.out.println("¿Desea realizar alguna otra acción?");
+					System.out.println(" ");
+					System.out.println("-------------------------------------------------------------------------");
 					System.out.println(
 							"Si desea anadir otro artículo a la lista pulse 'A'.\nSi desea eliminar un artículo de la lista pulse 'E'.\nPara mostrar la lista y salir de la aplicación pulse 'S'. ");
 					System.out.print("Opción escogida: ");
 					opcionUsuario = teclado.nextLine().toUpperCase().charAt(0);
 					validacionOpcionUsuario(teclado, esOpcionValida, opcionUsuario);
+					System.out.println("-------------------------------------------------------------------------");
+				}
+				else {
+					System.out.println("Escoja el número del artículo que desea eliminar");
+					int j=0;
+					for (ArticuloAComprar articulo : listaDeLaCompra.listaArticulos) {
+						System.out.println(articulo.getDescripcion() + " - " + articulo.getCantidad() + " - "
+								+ articulo.getUnidad() + ". ("+j+")");
+						j++;
+					}
+					//System.out.println("Valor de j: "+j);
+					System.out.print("¿Qué artículo desea eliminar? ");
+					int articuloEliminado = teclado.nextInt();
+					teclado.nextLine();
+					System.out.println(" ");
+					System.out.println("Borrando...."+listaDeLaCompra.listaArticulos.get(articuloEliminado).getDescripcion()+" de la lista de la compra.");
+					listaDeLaCompra.listaArticulos.remove(articuloEliminado);
+					System.out.println("La lista de la compra ha quedado de la siguiente manera:");
+					mostrarLista(listaDeLaCompra);
+					System.out.println(" ");
+					System.out.println("-------------------------------------------------------------------------");
+					System.out.println(
+							"Si desea anadir un artículo a la lista pulse 'A'.\nSi desea eliminar otro artículo de la lista pulse 'E'.\nPara mostrar la lista y salir de la aplicación pulse 'S'. ");
+					System.out.print("Opción escogida: ");
+					opcionUsuario = teclado.nextLine().toUpperCase().charAt(0);
+					validacionOpcionUsuario(teclado, esOpcionValida, opcionUsuario);
+					System.out.println("-------------------------------------------------------------------------");
 				}
 			}
 		}
-		if (opcionUsuario == 'S') {
+		if (opcionUsuario == 'G') {
 			mostrarLista(listaDeLaCompra);
 			System.exit(0);
 		}
@@ -105,11 +141,10 @@ public class Principal {
 	private static void mostrarLista(ListaDeLaCompra listaDeLaCompra) {
 		if (listaDeLaCompra.listaArticulos.isEmpty()) {
 			System.out.println(" ");
-			System.out.println("***Mostrando lista: " + listaDeLaCompra.getNombreLista() + "***");
+			System.out.println("*** " + listaDeLaCompra.getNombreLista() + "***");
 			System.out.println("La lista de la compra está vacía");
 		} else {
-			System.out.println(" ");
-			System.out.println("***Mostrando lista: " + listaDeLaCompra.getNombreLista() + "***");
+			System.out.println("*** " + listaDeLaCompra.getNombreLista() + "***");
 			for (ArticuloAComprar articulo : listaDeLaCompra.listaArticulos) {
 				System.out.println(articulo.getDescripcion() + " - " + articulo.getCantidad() + " - "
 						+ articulo.getUnidad() + ".");
@@ -119,7 +154,7 @@ public class Principal {
 
 	private static char validacionOpcionUsuario(Scanner teclado, boolean esOpcionValida, char opcionUsuario) {
 		while (!esOpcionValida) {
-			if (opcionUsuario == 'A' || opcionUsuario == 'E' || opcionUsuario == 'S') {
+			if (opcionUsuario == 'A' || opcionUsuario == 'E' || opcionUsuario == 'G') {
 				esOpcionValida = true;
 			} else {
 				System.err.println("La opción escogida no está disponible");
