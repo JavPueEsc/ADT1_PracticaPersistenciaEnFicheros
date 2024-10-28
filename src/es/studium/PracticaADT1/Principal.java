@@ -14,6 +14,7 @@ import java.util.Scanner;
 
 public class Principal {
 
+	private static final String RUTA = "Listas de la compra";
 	private static ListaDeLaCompra listaDeLaCompra;
 	private static ArticuloAComprar articulo;
 
@@ -26,16 +27,13 @@ public class Principal {
 		char opcionUsuarioSobreescribir = ' ';
 		String nombreLista = "";
 
-		File Listas_Dir = new File("Listas de la compra");
+		File Listas_Dir = new File(RUTA);
 		Listas_Dir.mkdirs();
 
 		listaDeLaCompra = new ListaDeLaCompra();
 
 		System.out.println("*** BIENVENID@ A LA APLICACIÓN PARA GESTIONAR TICKETS DE LA COMPRA ***");
-		System.out.println(" ");
-		System.out.println("*** MENÚ PRINCIPAL ***");
-		System.out.println("-------------------------------------------------------------------------");
-		System.out.println("Para consultar una lista creada pulse 'L'.\nPara crear una neuva lista pulse 'C'");
+		mostrarOpcionesMenuPrincipal();
 		System.out.print("Opción escogida: ");
 		opcionUsuarioMenuPrincipal = teclado.nextLine().toUpperCase().charAt(0);
 		esOpcionValida = false;
@@ -43,7 +41,34 @@ public class Principal {
 				opcionUsuarioMenuPrincipal);
 		System.out.println("-------------------------------------------------------------------------");
 		if (opcionUsuarioMenuPrincipal == 'L') {
-			System.out.println("Consultar");
+			//---> CONSULTAS");
+			File[] listaFicheros = Listas_Dir.listFiles();
+			String[] listaNombresFicheros = Listas_Dir.list();
+			System.out.println("Las listas de la compra guardadas son:");
+			int l =0;
+			for(String nombreFichero :  listaNombresFicheros) {
+				System.out.println(nombreFichero+" ("+l+").");
+				l++;
+			}
+			System.out.println(" ");
+			System.out.print("Escoja el número de la lista que desea consultar: ");
+			int eleccionLista = teclado.nextInt();
+			teclado.nextLine();
+			
+			System.out.println(" ");
+			System.out.println("*** "+listaNombresFicheros[eleccionLista]+" ***");
+			try {
+				FileReader fr = new FileReader(listaFicheros[eleccionLista]);
+	            BufferedReader br = new BufferedReader(fr);
+	            
+	            String linea;
+	            while ((linea = br.readLine()) != null) {
+	                System.out.println(linea);
+	            }
+			}
+			catch (IOException e) {
+	            System.out.println("Error al leer el archivo: " + e.getMessage());
+	        }
 		}
 
 		if (opcionUsuarioMenuPrincipal == 'C') {
@@ -192,6 +217,13 @@ public class Principal {
 
 	}
 
+	private static void mostrarOpcionesMenuPrincipal() {
+		System.out.println(" ");
+		System.out.println("*** MENÚ PRINCIPAL ***");
+		System.out.println("-------------------------------------------------------------------------");
+		System.out.println("Para consultar una lista creada pulse 'L'.\nPara crear una nueva lista pulse 'C'");
+	}
+
 	private static void mostrarLista(ListaDeLaCompra listaDeLaCompra) {
 		if (listaDeLaCompra.listaArticulos.isEmpty()) {
 			System.out.println(" ");
@@ -216,7 +248,7 @@ public class Principal {
 				System.out.println("*** MENÚ CREACIÓN DE NUEVAS LISTAS ***");
 				System.out.println("-------------------------------------------------------------------------");
 				System.out.println(
-						"Si desea anadir un artículo a la lista pulse 'A'.\nSi desea eliminar un artículo de la lista pulse 'E'.\nPara mostrar la lista y salir de la aplicación pulse 'G'. ");
+						"Si desea anadir un artículo a la lista pulse 'A'.\nSi desea eliminar otro artículo de la lista pulse 'E'.\nPara mostrar la lista y salir de la aplicación pulse 'G'. ");
 				System.out.print("Opción escogida: ");
 				opcionUsuario = teclado.nextLine().toUpperCase().charAt(0);
 				System.out.println("-------------------------------------------------------------------------");
